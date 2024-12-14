@@ -1,0 +1,498 @@
+25/10/2024, 16:01 - Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more.
+06/11/2024, 10:47 - Abhishek Yadav: #include<bits/stdc++.h>
+using namespace std;
+
+struct Transition {
+    char present_state;
+    char next_state;
+    int input;
+    int output;
+};
+
+void findSequenceAndType(const vector<Transition>& transitions) {
+    string sequence = "";
+    unordered_map<char, vector<pair<int, char>>> state_transitions;
+    set<pair<char, char>> visited_transitions;
+
+    char last_state = '\0';
+
+
+    for (const auto& t : transitions) {
+
+        if (t.present_state == t.next_state || 
+           (last_state == t.next_state && last_state != '\0')) {
+            continue;
+        }
+
+        sequence += to_string(t.input);
+        last_state = t.present_state;
+    }
+
+
+    bool isNonOverlapping = false;
+    char initialState = transitions[0].present_state;
+
+    for (const auto& t : transitions) {
+        if (t.output == 1 && t.next_state == initialState) {
+            isNonOverlapping = true;
+            break;
+        }
+    }
+
+
+    cout << sequence << endl;
+    cout << (isNonOverlapping ? "Non Overlapping Sequence Detector" : "Overlapping Sequence Detector") << endl;
+}
+
+int main() {
+    vector<Transition> transitions;
+    char present_state, next_state;
+    int input, output;
+
+    // Read inputs until EOF
+    while (cin >> present_state >> next_state >> input >> output) {
+        transitions.push_back({present_state, next_state, input, output});
+    }
+
+    findSequenceAndType(transitions);
+
+    return 0;
+}
+07/11/2024, 11:58 - ARPIT SETH: years = [2000,2002,2004,2006,2008,2010]
+
+python = [10000,20000,70000,63000,79460,85000]
+
+plt.xlabel("years")
+plt.ylabel("salary")
+
+plt.plot(years,python,marker='o',linestyle='dotted',color='r')
+plt.title("salary analysis")
+
+plt.grid(True)
+
+plt.show()
+07/11/2024, 12:09 - ARPIT SETH: x1 = [2000,2010,2020,2030]
+
+y1 = [6,3,12,10]
+
+plt.subplot(1,2,1)
+
+plt.plot(x1,y1)
+
+y2 = [10,20,30,40]
+
+plt.subplot(1,2,2)
+
+plt.plot(x1,y2)
+
+plt.show()
+07/11/2024, 14:07 - ARPIT SETH: https://learnys-exam--14-oct-2024-w4h8evtu.web.app/login
+
+
+Dear all, 
+Keep practicing till Question Number 62.
+07/11/2024, 15:57 - ARPIT SETH: <Media omitted>
+08/11/2024, 10:01 - Abhishek Yadav: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .converter {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ffe9;
+            border-radius: 4px;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="converter">
+        <h1>Currency Converter</h1>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="fromCurrency">From Currency:</label>
+            <select id="fromCurrency"></select>
+        </div>
+        <div class="form-group">
+            <label for="toCurrency">To Currency:</label>
+            <select id="toCurrency"></select>
+        </div>
+        <button onclick="convertCurrency()">Convert</button>
+        <div id="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        let rates = {};
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+        const fromSelect = document.getElementById('fromCurrency');
+        const toSelect = document.getElementById('toCurrency');
+
+        // Fetch exchange rates and populate currency dropdowns
+        async function fetchRates() {
+            try {
+                const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                const data = await response.json();
+                rates = data.rates;
+                
+                // Populate currency dropdowns
+                const currencies = Object.keys(rates).sort();
+                currencies.forEach(currency => {
+                    fromSelect.add(new Option(currency, currency));
+                    toSelect.add(new Option(currency, currency));
+                });
+
+                // Set default selections
+                fromSelect.value = 'USD';
+                toSelect.value = 'EUR';
+            } catch (error) {
+                showError('Failed to load exchange rates. Please try again later.');
+            }
+        }
+
+        // Convert currency
+        async function convertCurrency() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = fromSelect.value;
+            const toCurrency = toSelect.value;
+
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount');
+                return;
+            }
+
+            try {
+                // Convert through USD as base
+                const amountInUSD = amount / rates[fromCurrency];
+                const convertedAmount = amountInUSD * rates[toCurrency];
+                
+                showResult(amount, fromCurrency, convertedAmount, toCurrency);
+            } catch (error) {
+                showError('Conversion failed. Please try again.');
+            }
+        }
+
+        function showResult(fromAmount, fromCurrency, toAmount, toCurrency) {
+            resultDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            resultDiv.innerHTML = `${fromAmount.toFixed(2)} ${fromCurrency} = ${toAmount.toFixed(2)} ${toCurrency}`;
+        }
+
+        function showError(message) {
+            errorDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+            errorDiv.textContent = message;
+        }
+
+        // Initialize the converter
+        fetchRates();
+    </script>
+</body>
+</html>
+08/11/2024, 10:10 - Abhishek Yadav: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .converter {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        input {
+            width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 80px;
+            font-size: 16px;
+        }
+        h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="converter">
+        <h2>Currency Converter</h2>
+        <div class="row">
+            <input type="number" id="fromAmount" placeholder="Enter amount">
+            <select id="fromCurrency"></select>
+        </div>
+        <div class="row">
+            <input type="number" id="toAmount" placeholder="Converted amount" readonly>
+            <select id="toCurrency"></select>
+        </div>
+    </div>
+
+    <script>
+        const fromAmount = document.getElementById('fromAmount');
+        const toAmount = document.getElementById('toAmount');
+        const fromCurrency = document.getElementById('fromCurrency');
+        const toCurrency = document.getElementById('toCurrency');
+        let rates = {};
+
+        // Fetch exchange rates and populate dropdowns
+        async function fetchRates() {
+            try {
+                const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                const data = await response.json();
+                rates = data.rates;
+                
+                // Populate currency dropdowns
+                const currencies = Object.keys(rates).sort();
+                currencies.forEach(currency => {
+                    fromCurrency.add(new Option(currency, currency));
+                    toCurrency.add(new Option(currency, currency));
+                });
+
+                // Set default values
+                fromCurrency.value = 'USD';
+                toCurrency.value = 'EUR';
+            } catch (error) {
+                console.error('Failed to load rates:', error);
+            }
+        }
+
+        // Convert currency
+        function convert() {
+            if (!fromAmount.value) {
+                toAmount.value = '';
+                return;
+            }
+
+            const amount = parseFloat(fromAmount.value);
+            const from = fromCurrency.value;
+            const to = toCurrency.value;
+
+            // Convert through USD as base
+            const amountInUSD = amount / rates[from];
+            const converted = amountInUSD * rates[to];
+            
+            toAmount.value = converted.toFixed(2);
+        }
+
+        // Add event listeners
+        fromAmount.addEventListener('input', convert);
+        fromCurrency.addEventListener('change', convert);
+        toCurrency.addEventListener('change', convert);
+
+        // Initialize
+        fetchRates();
+    </script>
+</body>
+</html>
+11/11/2024, 09:55 - ARPIT SETH: 17 hai tumhare soft computing
+11/11/2024, 09:55 - ARPIT SETH: Sign kardiya tumhara
+11/11/2024, 11:06 - Abhishek Yadav: Ok
+16/11/2024, 22:45 - ARPIT SETH: Yadav research paper wala dekhlo kya karna hai
+16/11/2024, 22:52 - Abhishek Yadav: Ok dekhte hai
+19/11/2024, 10:31 - ARPIT SETH: import React from 'react'
+import './App.css'
+import Student from './Student.jsx'
+import logo from './assets/OIP (1).jpeg'
+
+function App() {
+
+  let a =20;
+
+  let mystyle ={
+    backgroundColor : 'cyan',
+    color:'red',
+    border:'10px solid black',
+    height : '100px',
+    
+
+  }
+
+  const student_data = {
+    name : "seth",
+    roll : 45,
+    college: "ABES Engineering College",
+    sec : "B",
+    branch : "Aiml",
+    pic : 'https://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/img/car_4.png'
+    
+  }
+  return (
+
+   
+
+    <div style={{color:'black'}}> 
+    {/* <h2>App</h2> */}
+
+
+    {/* <Student college="ABES Engineering College" sec="B" roll="45" name = "Seth" branch ="Aiml" pic = {<img src={logo} height={100} width={100}/>}/>
+    <Student  sec="B" roll="46" name = "Tomar" branch ="Aiml" pic = {<img src={logo} height={100} width={100}/>}/>
+    <Student college="ABES Engineering College" sec="B" roll="47" name = "Diwedi" branch ="Aiml" pic = {<img src={logo} height={100} width={100}/>}/> */}
+
+    <Student data = {student_data}/>
+
+
+
+
+
+    </div>
+  )
+}
+
+export default App
+19/11/2024, 10:32 - ARPIT SETH: import React from 'react'
+import './Student.css'
+import logo from './assets/OIP (1).jpeg'
+
+function Student({data}) {
+  return (
+    <div className='icard'>
+      
+      <table>
+        <tbody>
+            <tr>
+                <td colSpan={2}>{data.college}</td>
+            </tr>
+            <tr>
+                <td colSpan={2}><img src={logo} alt="" height={100} width={100}/></td>
+            </tr>
+            <tr>
+                <td>Roll : </td>
+                <td>{data.roll}</td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td>{data.name}</td>
+            </tr>
+            <tr>
+                <td>Branch :</td>
+                <td>{data.branch}</td>
+            </tr>
+            <tr>
+                <td>Section</td>
+                <td>{data.sec}</td>
+            </tr>
+        </tbody>
+      </table>
+
+
+      {/* {
+        JSON.stringify(data)
+      } */}
+
+    
+
+    </div>
+  )
+}
+
+// Student.defaultProps={
+//     college:"AKG Engineering College"
+// }
+
+export default Student
+19/11/2024, 10:40 - ARPIT SETH: <Media omitted>
+05/12/2024, 08:51 - Abhishek Yadav: Quiz code bhej dena
+05/12/2024, 09:16 - ARPIT SETH: Ai quiz -> UVNZ
+05/12/2024, 10:15 - ARPIT SETH: 2EG6
+05/12/2024, 10:48 - ARPIT SETH: Yadav research paper ka dekh lo
+05/12/2024, 10:48 - ARPIT SETH: aaj
+05/12/2024, 10:48 - ARPIT SETH: kyuki agle hafte hai
+05/12/2024, 10:50 - ARPIT SETH: kah rhi guide se milna hai jaruri
+05/12/2024, 11:00 - Abhishek Yadav: Ok
+05/12/2024, 11:00 - Abhishek Yadav: Is week mein. Bna denge
+05/12/2024, 11:00 - ARPIT SETH: sunday tak bna ke bhej dena group par fir Monday ko mil lenge
+05/12/2024, 11:01 - Abhishek Yadav: Ha
+05/12/2024, 11:01 - ARPIT SETH: mai bhi project bna lunga tab tak
+05/12/2024, 11:01 - Abhishek Yadav: Okk
+05/12/2024, 12:49 - ARPIT SETH: Yadav bhar ke dekhna exam form bhar rha hai kya
+05/12/2024, 12:50 - Abhishek Yadav: Kha hai tu??
+05/12/2024, 12:50 - ARPIT SETH: Class
+05/12/2024, 12:51 - Abhishek Yadav: Ok
+06/12/2024, 14:20 - Abhishek Yadav: <Media omitted>
+06/12/2024, 14:23 - Abhishek Yadav: https://www.overleaf.com/project/639c29311f0e3d45174e1bd3
+06/12/2024, 17:47 - ARPIT SETH: Meri file dbms tumhare pass hai na
+06/12/2024, 17:48 - ARPIT SETH: ?
+07/12/2024, 23:07 - ARPIT SETH: You deleted this message
+07/12/2024, 23:07 - ARPIT SETH: ....
+07/12/2024, 23:22 - Abhishek Yadav: Ha dekh rha
+07/12/2024, 23:22 - Abhishek Yadav: Project start kr diye
+07/12/2024, 23:22 - Abhishek Yadav: Bnana
+07/12/2024, 23:23 - ARPIT SETH: Hmm
+07/12/2024, 23:24 - Abhishek Yadav: Ok
