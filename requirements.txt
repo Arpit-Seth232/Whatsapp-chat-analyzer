@@ -4,8 +4,4 @@ matplotlib
 numpy
 seaborn
 Counter
-re
-emoji
-URLExtract
-WordCloud 
-emoji.unicode_codes
+
