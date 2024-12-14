@@ -3,9 +3,9 @@ pandas
 matplotlib
 numpy
 seaborn
-collections
+Counter
 re
 emoji
-urlextract
-wordcloud 
+URLExtract
+WordCloud 
 emoji.unicode_codes
